@@ -83,10 +83,3 @@ class xm:
 
     def desconexion(self):
         self.ftp.quit()
-
-# Conexion con usuario y carpeta del agente 
-user1 = xm('######', '######', '#####')
-user1.set_periodo(2023, 10)  # Establece el periodo antes de conectar
-user1.archivo='#####'
-user1.version='####'
-user1.conexion_comercia()
