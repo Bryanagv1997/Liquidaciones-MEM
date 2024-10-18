@@ -1,0 +1,42 @@
+{  
+    "OEFAGNCH":  
+    {
+   "Descripcion" : "Información necesaria para el cálculo de las desviaciones positivas horarias de las Obligaciones de Energía Firme para cada uno de los agentes generadores que tiene una desviación diaria positiva. Este archivo sólo se publica cuando el precio de bolsa supera el precio de escasez, para Comercializadores"
+    },
+    "DSPCTTOSGD":  
+    {
+   "Descripcion" : "Información de los contratos  de generación distribuida que fueron incluidos en el despacho del respectivo día, para cada agente según sea su posición en el contrato de comprador o de vendedor, para comercializadores"
+    },
+    "AENC":  
+    {
+   "Descripcion" : "Energía horaria referida al STN de los contadores asociados a las fronteras comerciales de los comercializadores para un mes y un día determinado, en las diferentes versiones (tx1,tx2,txf,...,txn) de liquidación publicación de la información."
+    },
+    "BALCTTOS":  
+    {
+   "Descripcion" : "Información del balance del despacho de contratos del respectivo día que incluye: Contratos de compra y venta, Demanda Comercial y Compras y Ventas de Bolsa del agente para comercializadores"
+    },
+    "TFROC":  
+    {
+   "Descripcion" : "Información Base de las Fronteras por Comercializador"
+    },
+    "DSPCDDVC":  
+    {
+   "Descripcion" : "Información de las cantidades contratas inicialmente y contratadas ajustadas según el comportamiento de las fronteras DDV asociadas al contrato DDV que fueron incluidos en el despacho del respectivo día, para cada agente según sea su posición en el contrato de comprador o de vendedor, para comercializadores y generadores"
+    },
+    "DESB":  
+    {
+   "Descripcion" : "Contiene la información de Pérdidas asociadas a la generación excedentaria. Para comercializador: demanda que se reduce por generación excedentaria. Para el generador: Participación en la demanda por generación excedentaria."
+    },
+    "DESBMEXC":  
+    {
+   "Descripcion" : "Contiene la información de alivios y demandas asociados a generación excedentaria por submercado en los diferentes mercados de comercialización en que participa."
+    },
+    "DESBMAGPE":  
+    {
+   "Descripcion" : "Contiene la información de los alivios por submercado asociados a Autogeneración a Pequeña Escala -AGPE-, para comercializadores entrantes."
+    },
+    "DSPCTTOS":  
+    {
+   "Descripcion" : "Información de los contratos que fueron incluidos en el despacho del respectivo día, para cada agente según sea su posición en el contrato de comprador o de vendedor, para comercializadores"
+    }
+}

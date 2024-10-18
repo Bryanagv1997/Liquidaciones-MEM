@@ -70,7 +70,7 @@ class xm:
         self.ftp.cwd(f'/INFORMACION_XM/USUARIOSK/{self.agente}/SIC/COMERCIA/{self.periodo}')
         print(f'Estoy en la ruta {self.ftp.pwd()}')
         self.busqueda()
-        print(f'\n Iniciadno la descarga de archivos.')
+        print(f'\n Iniciando la descarga de archivos.')
         self.descarga()
 
 
@@ -78,7 +78,7 @@ class xm:
         self.ftp.cwd(f'/INFORMACION_XM/USUARIOSK/{self.agente}/FINANCE/SIC/{self.periodo}')
         print(f'Estoy en la ruta {self.ftp.pwd()}') 
         self.busqueda()
-        print(f'\n Iniciadno la descarga de archivos.')
+        print(f'\n Iniciando la descarga de archivos.')
         self.descarga()          
 
     def desconexion(self):

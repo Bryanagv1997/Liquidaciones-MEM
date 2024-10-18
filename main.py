@@ -7,3 +7,4 @@ user1.set_periodo(2020,1)  # Establece el periodo antes de conectar
 user1.archivo='###'
 user1.version='###'
 user1.conexion_comercia()
+user1.desconexion()
