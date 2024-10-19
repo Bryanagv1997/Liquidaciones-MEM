@@ -1,6 +1,7 @@
 from ftplib import FTP_TLS
 import fnmatch
 import os
+import pandas as pd
 
 class xm:
     def __init__(self, usuario, pwss, agente):
@@ -30,6 +31,7 @@ class xm:
         self._version = version_info
 
     def set_periodo(self, año, mes):
+        self.año= año
         self.periodo = f'{año}-{mes}'
     
     def directorio(self):
@@ -65,6 +67,20 @@ class xm:
             self.ftp.retrbinary(f'RETR {archivo}',open(archivo,'wb').write)
             print(f'Archivo "{archivo}" descargado exitosamente.')
         print(f'Se ha completado exitosamente la descarga.')
+    
+    def to_excel(self):
+        data_base = pd.DataFrame()
+        for file_name in self.Files:
+
+            fecha_str =  file_name[len(self.archivo):-len('.'+self.version)]
+            fecha = pd.to_datetime(str(self.año)+fecha_str,format='%Y%m%d')
+
+            df = pd.read_table(file_name,sep=';',encoding='latin-1')
+            df['fecha'] = fecha
+
+            data_base = pd.concat((data_base,df))
+        [os.remove(archivo) for archivo in self.Files] 
+        data_base.to_excel(self.archivo+'_'+self.version+'.xlsx',index=False)
 
     def conexion_comercia(self):
         self.ftp.cwd(f'/INFORMACION_XM/USUARIOSK/{self.agente}/SIC/COMERCIA/{self.periodo}')
