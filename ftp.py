@@ -67,6 +67,7 @@ class xm:
             self.ftp.retrbinary(f'RETR {archivo}',open(archivo,'wb').write)
             print(f'Archivo "{archivo}" descargado exitosamente.')
         print(f'Se ha completado exitosamente la descarga.')
+        self.to_excel()
     
     def to_excel(self):
         data_base = pd.DataFrame()
@@ -81,6 +82,7 @@ class xm:
             data_base = pd.concat((data_base,df))
         [os.remove(archivo) for archivo in self.Files] 
         data_base.to_excel(self.archivo+'_'+self.version+'.xlsx',index=False)
+        os.chdir("..")
 
     def conexion_comercia(self):
         self.ftp.cwd(f'/INFORMACION_XM/USUARIOSK/{self.agente}/SIC/COMERCIA/{self.periodo}')
@@ -95,7 +97,14 @@ class xm:
         print(f'Estoy en la ruta {self.ftp.pwd()}') 
         self.busqueda()
         print(f'\n Iniciando la descarga de archivos.')
-        self.descarga()          
+        self.descarga()
+
+    def conexion_publico(self):
+        self.ftp.cwd(f'/INFORMACION_XM/PUBLICOK/SIC/COMERCIA/{self.periodo}')
+        print(f'Estoy en la ruta {self.ftp.pwd()}') 
+        self.busqueda()
+        print(f'\n Iniciando la descarga de archivos.')
+        self.descarga()                  
 
     def desconexion(self):
         self.ftp.quit()
