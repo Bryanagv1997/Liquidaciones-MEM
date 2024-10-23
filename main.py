@@ -1,5 +1,5 @@
 from ftp import xm
-
+from ftp import liq
 # Conexion con usuario y carpeta del agente 
 
 user1 = xm('1017243061', 'Bwcn"1IL"Z{cSd|1', 'SFEC')
@@ -10,3 +10,7 @@ user1.conexion_comercia()
 user1.archivo='cliq' # Archivo donde se encuentra el PEP.
 user1.conexion_publico() #Conexion con el sitio publico del ASIC
 user1.desconexion()
+
+liquidacion = liq('dspcttos','cliq')
+compras,resultado = liquidacion.liquidacion()
+liquidacion.imagen_liquidacion(compras,resultado,'Tabla_liquidacion.png')

@@ -2,6 +2,7 @@ from ftplib import FTP_TLS
 import fnmatch
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class xm:
     def __init__(self, usuario, pwss, agente):
@@ -108,3 +109,85 @@ class xm:
 
     def desconexion(self):
         self.ftp.quit()
+
+class liq:
+
+    def __init__(self,dspcctos,cliq):
+        lista = [dspcctos,cliq]
+        self.dataframes =[]
+        for i in lista:
+            os.chdir(i)
+            archivos = os.listdir()
+            for archivo in archivos:
+                        self.dataframes.append(pd.read_excel(archivo))
+            os.chdir('..')
+        print('Lectura de los archivo dataframe finalizado')
+
+    def liquidacion(self):
+        df_dsp = self.dataframes[0].round(2)
+        df = df_dsp.drop(['TIPO','TIPOMERC','TIPO ASIGNA'],axis=1)
+        # Se crea lista de columnas pra seleccionar
+        _desp = ['DESP_HORA {:02}'.format(i) for i in range(1,25)]
+        _hora = ['TRF_HORA {:02}'.format(i) for i in range(1,25)]
+
+        # Contratos de compra y venta
+        Compras_Contratos = df[df['COMPRADOR'].isin(['SFEC'])]
+        Ventas_Contratos = df[df['VENDEDOR'].isin(['SFEC'])]
+
+        # Filtro para filtrar por el agente comercializador
+        df_cliq = self.dataframes[1]
+        cliq= df_cliq[df_cliq['AGENTE'].isin(['SFEC'])]
+        # Bolsa
+        ventas_bolsa_kWh = cliq['VENTAS BOLSA kwh'].sum()
+        ventas_bolsa_COP = cliq['VENTAS BOLSA $'].sum()
+        compras_bolsa_kWh = cliq['COMPRAS BOLSA kwh'].sum()
+        compras_bolsa_COP = -cliq['COMPRAS BOLSA $'].sum()
+        Compras_Contratos_kWh = Compras_Contratos.groupby(['CONTRATO','COMPRADOR','VENDEDOR'])[_desp].sum().sum(axis=1).reset_index(name='Total [kWh/mes]')
+        Ventas_Contratos_kWh = Ventas_Contratos.groupby(['CONTRATO','COMPRADOR','VENDEDOR'])[_desp].sum().sum(axis=1).reset_index(name='Total [kWh/mes]')
+        # Se calcula el despacho de los contratos
+        Compras_Contratos_COP = Compras_Contratos.groupby(['CONTRATO','COMPRADOR','VENDEDOR']).apply(lambda x:(-x[_desp].values*x[_hora].values).sum()).reset_index(name='Total [COP]')
+        Ventas_Contratos_COP = Ventas_Contratos.groupby(['CONTRATO','COMPRADOR','VENDEDOR']).apply(lambda x:(x[_desp].values*x[_hora].values).sum()).reset_index(name='Total [COP]')
+        # Paso anterior no es necesario para el calculo pero si se quiere mostar tablas diferentes (compras y ventas) es un buen ejercicio
+        Compras = pd.merge(Compras_Contratos_kWh,Compras_Contratos_COP,on=['CONTRATO','COMPRADOR','VENDEDOR'],how='inner')
+        Ventas = pd.merge(Ventas_Contratos_kWh,Ventas_Contratos_COP,on=['CONTRATO','COMPRADOR','VENDEDOR'],how='inner')
+
+        Compras_COP=Compras['Total [COP]'].sum()
+        ventas_COP=Ventas['Total [COP]'].sum()
+
+        Compras_kwh=Compras['Total [kWh/mes]'].sum()
+        ventas_kwh=Ventas['Total [kWh/mes]'].sum()
+
+        # Se realiza un consolidado completo de todos los contratos del comercializador
+        totales = pd.DataFrame([['VENTAS BOLSA','','SFEC',ventas_bolsa_kWh,ventas_bolsa_COP],['VENTAS TOTALES','-','SFEC',ventas_kwh + ventas_bolsa_kWh,ventas_COP+ventas_bolsa_COP]],columns=Ventas.columns)
+        resultado_contratos = pd.concat([Ventas,totales])
+        totales = pd.DataFrame([['COMPRAS BOLSA','SFEC','-',compras_bolsa_kWh,compras_bolsa_COP],['COMPRAS TOTALES','SFEC','-',Compras_kwh + compras_bolsa_kWh,Compras_COP+compras_bolsa_COP]],columns=Ventas.columns)
+        resultado_contratos = pd.concat([resultado_contratos,Compras])
+        resultado_contratos = pd.concat([resultado_contratos,totales])
+        totales = pd.DataFrame([['MARGEN TOTAL','-','-',Compras_kwh+compras_bolsa_kWh,ventas_COP+ventas_bolsa_COP+Compras_COP+compras_bolsa_COP]],columns=Ventas.columns)
+        resultado_contratos = pd.concat([resultado_contratos,totales])
+        resultado_contratos['Total [kWh/mes]'] = resultado_contratos['Total [kWh/mes]'].apply(lambda x: f'{x:,.2f}')
+        resultado_contratos['Total [COP]'] = resultado_contratos['Total [COP]'].apply(lambda x: f'${x:,.2f}')
+        print('Tabla de resultados realizada')
+        return Compras,resultado_contratos
+    
+    def imagen_liquidacion(self,Compras,dataframe_, nombre_archivo):
+        fig, ax = plt.subplots(figsize=(10, 2))
+        ax.axis('tight')
+        ax.axis('off')
+        
+        # Crear la tabla
+        tabla = ax.table(cellText=dataframe_.values, colLabels=dataframe_.columns, cellLoc='center', loc='center')
+        tabla.auto_set_font_size(False)
+        tabla.set_fontsize(9)
+
+        # Establecer el formato de los títulos
+        for (i, j), cell in tabla.get_celld().items():
+            if i == 0 or i == len(dataframe_) or i==len(Compras)+1 or i == len(dataframe_)-1:  # Títulos
+                cell.set_text_props(fontweight='bold', color='black')
+            else:
+                cell.set_text_props(fontweight='normal', color='black')
+
+        # Guardar la tabla como imagen
+        plt.savefig(nombre_archivo, bbox_inches='tight', dpi=500)
+        plt.close()
+        print(f"Se crea imagen {nombre_archivo} para compartir")
