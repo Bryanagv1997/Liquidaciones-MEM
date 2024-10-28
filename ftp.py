@@ -64,11 +64,14 @@ class xm:
             print(f'El archivo {self.archivo} no existe en su version {self.version} o este archivo no existe en esta carpeta')
 
     def descarga(self):
+        contador = 0
         for archivo in self.Files:
             self.ftp.retrbinary(f'RETR {archivo}',open(archivo,'wb').write)
             print(f'Archivo "{archivo}" descargado exitosamente.')
+            contador +=1
         print(f'Se ha completado exitosamente la descarga.')
         self.to_excel()
+        return contador
     
     def to_excel(self):
         data_base = pd.DataFrame()
@@ -82,7 +85,7 @@ class xm:
 
             data_base = pd.concat((data_base,df))
         [os.remove(archivo) for archivo in self.Files] 
-        data_base.to_excel(self.archivo+'_'+self.version+'.xlsx',index=False)
+        data_base.to_excel(self.archivo+'_'+fecha_str+self.version+'_'+'.xlsx',index=False)
         os.chdir("..")
 
     def conexion_comercia(self):
@@ -90,7 +93,8 @@ class xm:
         print(f'Estoy en la ruta {self.ftp.pwd()}')
         self.busqueda()
         print(f'\n Iniciando la descarga de archivos.')
-        self.descarga()
+        dias=self.descarga()
+        return dias
 
 
     def conexion_finance(self):
@@ -170,7 +174,7 @@ class liq:
         print('Tabla de resultados realizada')
         return Compras,resultado_contratos
     
-    def imagen_liquidacion(self,Compras,dataframe_, nombre_archivo):
+    def imagen_liquidacion(self,año,mes,dias,Compras,dataframe_):
         fig, ax = plt.subplots(figsize=(10, 2))
         ax.axis('tight')
         ax.axis('off')
@@ -188,6 +192,6 @@ class liq:
                 cell.set_text_props(fontweight='normal', color='black')
 
         # Guardar la tabla como imagen
-        plt.savefig(nombre_archivo, bbox_inches='tight', dpi=500)
+        plt.savefig(f'{str(año)}_{str(mes)}_{str(dias)}_.png', bbox_inches='tight', dpi=500)
         plt.close()
-        print(f"Se crea imagen {nombre_archivo} para compartir")
+        print(f"Se crea imagen {str(año)}_{str(mes)}_{str(dias)}_para compartir")
