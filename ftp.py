@@ -85,7 +85,7 @@ class xm:
 
             data_base = pd.concat((data_base,df))
         [os.remove(archivo) for archivo in self.Files] 
-        data_base.to_excel(self.archivo+'_'+fecha_str+self.version+'_'+'.xlsx',index=False)
+        data_base.to_excel(self.archivo+'_'+self.version+'.xlsx',index=False)
         os.chdir("..")
 
     def conexion_comercia(self):
@@ -192,6 +192,6 @@ class liq:
                 cell.set_text_props(fontweight='normal', color='black')
 
         # Guardar la tabla como imagen
-        plt.savefig(f'{str(año)}_{str(mes)}_{str(dias)}_.png', bbox_inches='tight', dpi=500)
+        plt.savefig(f'{str(año)}_{str(mes)}_{str(dias)}.png', bbox_inches='tight', dpi=500)
         plt.close()
         print(f"Se crea imagen {str(año)}_{str(mes)}_{str(dias)}_para compartir")
