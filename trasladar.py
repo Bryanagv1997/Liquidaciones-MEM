@@ -29,11 +29,11 @@ def extraer_anio_mes(ruta_archivo):
     return anio_mes
 
 # Especifica el directorio que deseas leer
-directorio = '' # Ruta donde estoy corriendo ->>>>>>>>>> Lo mas importante //// Hacerlo desde usuario del servidor
+directorio = os.getcwd() 
 archivos_png = listar_archivos_png(directorio)
 
 # Imprimir los archivos PNG encontrados
-directorio_destino = '' # Ruta donde quiero copiar        ->>>>>>>>>> Lo mas importante //// Hacia otro usuario del servidor que tengas los permisos de para protocolo FTP
+directorio_destino = directorio+'/liquidaciones' 
 os.chdir(directorio_destino)
 
 
@@ -41,14 +41,14 @@ for archivo in archivos_png:
     directorio_creacion = extraer_anio_mes(archivo)
     print(directorio_creacion)
     try:
-        os.mkdir(directorio_destino+directorio_creacion)
-        print(f'Directorio "{directorio_destino+directorio_creacion}" creado exitosamente.')
-        os.chdir(directorio_destino+directorio_creacion)
+        os.mkdir(directorio_destino+"/"+directorio_creacion)
+        print(f'Directorio "{directorio_destino+"/"+directorio_creacion}" creado exitosamente.')
+        os.chdir(directorio_destino+"/"+directorio_creacion)
         shutil.copy(archivo,os.getcwd())
-        print(f'Directorio "{directorio_destino+directorio_creacion}" creado exitosamente.')
+        print(f'Directorio "{directorio_destino+"/"+directorio_creacion}" creado exitosamente.')
     except FileExistsError:
-        print(f'El directorio "{directorio_destino+directorio_creacion}" ya existe.')
-        os.chdir(directorio_destino+directorio_creacion)
+        print(f'El directorio "{directorio_destino+"/"+directorio_creacion}" ya existe.')
+        os.chdir(directorio_destino+"/"+directorio_creacion)
         print(f'Ahora estás en el directorio: {os.getcwd()}')
         shutil.copy(archivo,os.getcwd())
     except Exception as e:
