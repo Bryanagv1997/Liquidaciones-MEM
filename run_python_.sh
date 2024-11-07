@@ -1,19 +1,21 @@
-# !/bin/bash
-# programa para correr main.py en el bash como ejecutable
-# Se debe agregar el automatismo
-# crontab -e
-# 0 8 * * * RUTAABSOLUTA/run_python_.sh
+#!/bin/bash
+echo "Script de Python en ejecución..."
 
-# Cambiar al directorio correcto
-# cd /Liquidaciones || exit
+cd /home/penguinblack/Liquidaciones || exit
+echo "Directorio cambiado a /home/penguinblack/Liquidaciones--->Debes que poner tu ruta"
 
-# Activar el entorno virtual
-# Entorno ruta para activarla
 . ./venv/bin/activate || exit
+echo "Entorno virtual activado"
 
-# Ejecutar el script de Python
 python3 main.py || exit
+echo "main.py ejecutado con éxito"
+
 python3 trasladar.py || exit
-# Desactivar el entorno virtual (opcional)
+echo "trasladar.py ejecutado con éxito"
+
 deactivate
+echo "Entorno virtual desactivado"
+
 rm *.png
+echo "Archivos PNG eliminados"
+# Para verificar errores utilizar en ´crontab -e´ 0 8 * * * /home/penguinblack/Liquidaciones/run_python_.sh >> /home/penguinblack/salida.log 2>&1 
