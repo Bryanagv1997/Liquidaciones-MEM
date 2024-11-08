@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "Script de Python en ejecución..."
 
-cd /home/penguinblack/Liquidaciones || exit
-echo "Directorio cambiado a /home/penguinblack/Liquidaciones--->Debes que poner tu ruta"
+cd /home/penguinblack97/Liquidaciones || exit
+echo "Directorio cambiado a /home/penguinblack97/Liquidaciones"
 
 . ./venv/bin/activate || exit
 echo "Entorno virtual activado"

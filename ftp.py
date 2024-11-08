@@ -172,9 +172,9 @@ class liq:
         resultado_contratos['Total [kWh/mes]'] = resultado_contratos['Total [kWh/mes]'].apply(lambda x: f'{x:,.2f}')
         resultado_contratos['Total [COP]'] = resultado_contratos['Total [COP]'].apply(lambda x: f'${x:,.2f}')
         print('Tabla de resultados realizada')
-        return Compras,resultado_contratos
+        return Ventas,resultado_contratos
     
-    def imagen_liquidacion(self,año,mes,dias,Compras,dataframe_):
+    def imagen_liquidacion(self,año,mes,dias,Ventas,dataframe_):
         fig, ax = plt.subplots(figsize=(10, 2))
         ax.axis('tight')
         ax.axis('off')
@@ -186,7 +186,7 @@ class liq:
 
         # Establecer el formato de los títulos
         for (i, j), cell in tabla.get_celld().items():
-            if i == 0 or i == len(dataframe_) or i==len(Compras)+1 or i == len(dataframe_)-1:  # Títulos
+            if i == 0 or i == len(dataframe_) or i==len(Ventas)+2 or i == len(dataframe_)-1:  # Títulos
                 cell.set_text_props(fontweight='bold', color='black')
             else:
                 cell.set_text_props(fontweight='normal', color='black')
